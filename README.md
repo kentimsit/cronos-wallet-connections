@@ -63,7 +63,7 @@ https://buildpack-registry.s3.amazonaws.com/buildpacks/mars/create-react-app.tgz
 
 ```shell
 heroku login
-heroku git:remote -a cronos-world-tour-web
+heroku git:remote -a cronos-wallet-connections
 
 # Commit code to master
 

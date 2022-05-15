@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Store } from "../store/store-reducer";
 
 import * as config from "../config/config";
@@ -29,16 +29,7 @@ interface IProps {}
 const Home: React.FC<IProps> = () => {
   const { state, dispatch } = React.useContext(Store);
 
-  React.useEffect(() => {
-    async function initialLoad() {
-      // await connectWallet("defi-wallet");
-      console.log("Initial load");
-    }
-
-    initialLoad();
-  }, []);
-
-  const connectWallet = async (option: string) => {
+  const connectWallet = useCallback(async (option: string) => {
     // updateWalletAction(dispatch, { ...defaultWallet });
     // updateQueryResultsAction(dispatch, { ...defaultQueryResults });
     let newWallet: any;
@@ -87,7 +78,16 @@ const Home: React.FC<IProps> = () => {
         message: "Complete",
       });
     }
-  };
+  }, []);
+
+  React.useEffect(() => {
+    async function initialLoad() {
+      await connectWallet("defi-wallet");
+      console.log("Initial load");
+    }
+
+    initialLoad();
+  }, [connectWallet]);
 
   const transferCRO = async (recipientAddress: string, valueCro: number) => {
     window.alert("Transfer feature not yet implemented");
