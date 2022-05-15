@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { Store } from "../store/store-reducer";
+import { ethers } from "ethers"; // npm install ethers
 
 import * as config from "../config/config";
 import * as utils from "../helpers/utils";
@@ -13,7 +14,7 @@ import {
 } from "../store/actions";
 
 import { styled } from "@mui/material/styles";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography, Link } from "@mui/material";
 import { defaultChainData } from "../store/interfaces";
 
 const ActionButton = styled(Button)({
@@ -30,6 +31,14 @@ const Home: React.FC<IProps> = () => {
   const { state, dispatch } = React.useContext(Store);
 
   const connectWallet = useCallback(async (option: string) => {
+    updateRefreshingAction(dispatch, {
+      status: true,
+      message: "Connecting wallet...",
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     // updateWalletAction(dispatch, { ...defaultWallet });
     // updateQueryResultsAction(dispatch, { ...defaultQueryResults });
     let newWallet: any;
@@ -49,14 +58,6 @@ const Home: React.FC<IProps> = () => {
       default:
     }
 
-    updateRefreshingAction(dispatch, {
-      status: true,
-      message: "Connecting wallet...",
-    });
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
     // If wallet is connected, query the wallet and update stored values
     if (newWallet.connected) {
       const croBalance = await utils.getCroBalance(
@@ -90,7 +91,20 @@ const Home: React.FC<IProps> = () => {
   }, [connectWallet]);
 
   const transferCRO = async (recipientAddress: string, valueCro: number) => {
-    window.alert("Transfer feature not yet implemented");
+    updateRefreshingAction(dispatch, {
+      status: true,
+      message: "Creating transaction...",
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    const fromSigner = state.wallet.browserWeb3Provider.getSigner();
+    const tx = await fromSigner.sendTransaction({
+      to: recipientAddress,
+      value: ethers.utils.parseEther(valueCro.toString()),
+    });
+    window.alert("Transaction hash: " + tx.hash);
   };
 
   return (
@@ -145,7 +159,9 @@ const Home: React.FC<IProps> = () => {
             sx={{ color: "white", marginBottom: 2 }}
           >
             Wallet connection status:{" "}
-            {state.wallet.connected ? "connected" : "not connected"}
+            {state.wallet.connected
+              ? state.wallet.walletProviderName
+              : "not connected"}
           </Typography>
           <Typography
             variant="body1"
@@ -154,7 +170,9 @@ const Home: React.FC<IProps> = () => {
             sx={{ color: "white", marginBottom: 2 }}
           >
             Wallet address:{" "}
-            {state.wallet.address ? state.wallet.address : "no wallet address"}
+            {state.wallet.address
+              ? utils.truncateAddress(state.wallet.address)
+              : "no wallet address"}
           </Typography>
           <Typography
             variant="body1"
@@ -225,6 +243,24 @@ const Home: React.FC<IProps> = () => {
           >
             Transfer 1 CRO to myself
           </ActionButton>
+          <Typography
+            variant="h5"
+            component="div"
+            gutterBottom
+            sx={{ color: "white", marginBottom: 2, marginTop: 4 }}
+          >
+            Miscellaneous
+          </Typography>
+          <Link
+            href="https://cronos.org"
+            target="_blank"
+            rel="noopener"
+            sx={{ color: "#0091F4", marginBottom: 2 }}
+          >
+            <ActionButton variant="contained" sx={{ fontWeight: "bold" }}>
+              Open Cronos in new tab
+            </ActionButton>
+          </Link>
         </Paper>
       </Box>
     </div>
