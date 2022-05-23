@@ -7,6 +7,7 @@ import * as utils from "../helpers/utils";
 import * as walletConnect from "../helpers/wallet-connect";
 import * as walletMetamask from "../helpers/wallet-metamask";
 import * as walletDefiwallet from "../helpers/wallet-defiwallet";
+
 import {
   updateChainDataAction,
   updateRefreshingAction,
@@ -15,7 +16,7 @@ import {
 
 import { styled } from "@mui/material/styles";
 import { Box, Button, Paper, Typography, Link } from "@mui/material";
-import { defaultChainData } from "../store/interfaces";
+import { defaultChainData, defaultWallet } from "../store/interfaces";
 
 const ActionButton = styled(Button)({
   marginTop: "20px",
@@ -39,8 +40,7 @@ const Home: React.FC<IProps> = () => {
       top: 0,
       behavior: "smooth",
     });
-    // updateWalletAction(dispatch, { ...defaultWallet });
-    // updateQueryResultsAction(dispatch, { ...defaultQueryResults });
+    updateWalletAction(dispatch, { ...defaultWallet });
     let newWallet: any;
     switch (option) {
       // Wallet injected within browser (MetaMask)
@@ -83,8 +83,10 @@ const Home: React.FC<IProps> = () => {
 
   React.useEffect(() => {
     async function initialLoad() {
-      await connectWallet("defi-wallet");
-      console.log("Initial load");
+      if (config.configVars.activateAutoLoginDefiWallet) {
+        await connectWallet("defi-wallet");
+        console.log("Initial load");
+      }
     }
 
     initialLoad();
@@ -211,21 +213,22 @@ const Home: React.FC<IProps> = () => {
           <ActionButton
             variant="contained"
             onClick={() => {
+              connectWallet("injected");
+            }}
+            sx={{ fontWeight: "bold" }}
+          >
+            MetaMask / Trust Wallet
+          </ActionButton>
+          <ActionButton
+            variant="contained"
+            onClick={() => {
               connectWallet("wallet-connect");
             }}
             sx={{ fontWeight: "bold" }}
           >
             Wallet Connect
           </ActionButton>
-          <ActionButton
-            variant="contained"
-            onClick={() => {
-              connectWallet("injected");
-            }}
-            sx={{ fontWeight: "bold" }}
-          >
-            Injected (MetaMask)
-          </ActionButton>
+
           <Typography
             variant="h5"
             component="div"
@@ -252,13 +255,13 @@ const Home: React.FC<IProps> = () => {
             Miscellaneous
           </Typography>
           <Link
-            href="https://cronos.org"
+            href="https://cronos.org/docs/getting-started/"
             target="_blank"
             rel="noopener"
             sx={{ color: "#0091F4", marginBottom: 2 }}
           >
             <ActionButton variant="contained" sx={{ fontWeight: "bold" }}>
-              Open Cronos in new tab
+              Open Cronos developer docs
             </ActionButton>
           </Link>
         </Paper>

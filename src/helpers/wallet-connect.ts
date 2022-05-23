@@ -8,7 +8,6 @@ import * as config from "../config/config";
 import * as utils from "./utils";
 import { IWallet, defaultWallet } from "../store/interfaces";
 
-// Main login flow for Crypto.com DeFi Wallet with Wallet Extension
 // The connector must be activated, then it exposes a provider
 // that is used by the ethers Web3Provider constructor.
 export const connect = async (): Promise<IWallet> => {

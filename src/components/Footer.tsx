@@ -1,7 +1,7 @@
 import React from "react";
 
 import Typography from "@mui/material/Typography";
-import { AppBar, Box, Link } from "@mui/material";
+import { AppBar, Box } from "@mui/material";
 
 interface IProps {}
 

@@ -4,37 +4,47 @@ This ReactJS repository demonstrates various types of crypto wallet connections 
 
 ## Overview
 
-This app is a lightweight demo of crypto wallet integration with Cronos. It works with Crypto.com Defi Wallet, MetaMask, and Trust Wallet.
+### How to use this repository
 
-The app is designed to connect automatically with Crypto.com DeFi Wallet from within the Dapp browser. However, this only works if the domain has been allow-listed by the Crypto.com DeFi Wallet team.
+This app is a lightweight demo of crypto wallet integration with Cronos. It works with Crypto.com DeFi Wallet, MetaMask, and Trust Wallet.
 
-The app works on Cronos mainnet (network id: 25) and used the public JSON-RPC endpoint.
+The app works on Cronos mainnet (network id: 25) and uses the public JSON-RPC endpoint.
 
 So first, you will need to make the app compatible with :
 
 - Crypto.com DeFi Wallet browser extension
-- Wallet Connect (v1)
 - Injected Web3 provider (MetaMask, Trust Wallet)
+- Wallet Connect (v1)
 
 These wallet connections are implemented in the helpers directory, which is used by the Home.tsx component. The wallet and Web3 connection are stored in the redux store (see store directory).
 
 Run the app locally to test it in your desktop browser.
 
-If you'd like to test it on mobile, use ngrok which will explose a public URL for your localhost:3000.
+If you'd like to test it on mobile, you can use the ngrok software which will explose a public URL for your localhost:3000.
 
-Then, you will need to register for allow-listing by the Crypto.com DeFi Wallet team.
+Once the above is done, you will want to enable users to connect automatically with your Dapp from within the Crypto.com DeFi Wallet's Dapp browser. This actually does not require any additional development aside from the implementation of the Crypto.com DeFi Wallet browser extension. However, this does require manual review and allow-listing by the Crypto.com team. See below for the process.
+
+Finally, you may want to liaise with the Trust Wallet team in order to have your Dapp and/or token featured in the Trust Wallet browser. See below for the process.
 
 ### How to get allow-listed by the Crypto.com DeFi Wallet team
 
-The first step is to implement login via the Crypto .com Defi Wallet browser extension (for desktop browser), using the deficonnect npm package, which is included in this repo.
+First, let's note that the Crypto.comn DeFi Wallet supports Wallet Connect, so if you have followed the above steps, mobile DeFi Wallet users should already be able to connect to your Dapp via Wallet Connect.
+
+Second, let's examine the steps required to enable users to connect directly with your Dapp from within the DeFi Wallet's mobile Dapp browser.
+
+The first step is to implement login via the Crypto.com Defi Wallet browser extension, using the deficonnect npm package, which is included in this repo, as described above.
 
 See [this doc](https://cronos.org/docs/resources/web-extension-integration.html#introduction) for the official technical information.
 
-Then, once the Dapp front-end is deployed, you need to register it with [crypto.com](http://crypto.com/) using this form [https://crypto-com.typeform.com/to/bRvudlYV](https://crypto-com.typeform.com/to/bRvudlYV). The form will help to bring the Dapp to the Cronos Dapps tab of the Dapp browser on mobile. (They don't do it instantly, please wait couple of weeks). You can request to allow-list a staging domain and the production domain. Each subdomain needs to be allow-listed.
+Once the above is done and your Dapp is live, you will want to enable users to connect automatically with your Dapp from within the Crypto.com DeFi Wallet's Dapp browser. This actually does not require any additional development but require manual review and allow-listing by the Crypto.com team.
 
-When this is done, the wallet connection via browser extension should also work directly within the Defi Wallet’s in-app browser, via the same Web3 connector.
+Once the Dapp is live, you need to register it with [crypto.com](http://crypto.com/) using this form [https://crypto-com.typeform.com/to/bRvudlYV](https://crypto-com.typeform.com/to/bRvudlYV). You can request to allow-list a staging domain and the production domain. Each subdomain needs to be allow-listed.
 
-Meanwhile, of course you can also implement Dapp login via Wallet Connect which works as usual with the Crypto.com Defi Wallet and does not require any allow-listing.
+Once this is done, the wallet connection via deficonnect should also work automatically when the user connects to your Dapp from within the DeFi Wallet’s in-app browser.
+
+### How to have your Dapp and/or token featured in the Trust Wallet browser
+
+[Trust Wallet](https://trustwallet.com/) supports the Cronos mainnet. In order to have your Dapp and/or token featured in the Trust Wallet's mobile Dapp browser, refer to [this documentation](https://developer.trustwallet.com/listing-guide).
 
 ## Implementation details
 
@@ -49,17 +59,20 @@ npm install @mui/material @emotion/react @emotion/styled
 
 Webpack 5 creates some "BREAKING CHANGE: webpack<5 used to include polyfills" errors when using with web3.js. This blog post explains how to resolve the issue: [blog post](https://www.alchemy.com/blog/how-to-polyfill-node-core-modules-in-webpack-5).
 
-### Run locally
+### How to run locally
 
 ```shell
+npm install
 npm start
 ```
 
-### To deploy to Heroku
+### How to deploy to Heroku (for example)
 
-Must have a Proctile and the buildpack:
+Yo must have a Proctile (already included in this repository) and the following buildpack installed in the Settings of your Heroku app:
 
 https://buildpack-registry.s3.amazonaws.com/buildpacks/mars/create-react-app.tgz
+
+Then, to deploy to Heroku:
 
 ```shell
 heroku login

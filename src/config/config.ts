@@ -1,4 +1,5 @@
-// config/config.ts
+import * as dotenv from "dotenv";
+dotenv.config();
 
 export let apiUrl: string;
 export let webUrl: string;
@@ -14,6 +15,7 @@ if (process.env.NODE_ENV === "development") {
 
 export const configVars = {
   mode: "normal",
+  activateAutoLoginDefiWallet: true,
   rpcNetwork: {
     rpcUrl: "https://evm.cronos.org/",
     chainId: 25,
