@@ -22,9 +22,13 @@ export const connect = async (): Promise<IWallet> => {
           config.configVars.rpcNetwork.rpcUrl,
       },
     });
+    console.log("Provider", JSON.stringify(provider));
     const web3Provider = new ethers.providers.Web3Provider(provider);
     if (
-      !(parseInt(provider.chainId) === config.configVars.rpcNetwork.chainId)
+      !(
+        parseInt(provider.networkConfig.chainId) ===
+        config.configVars.rpcNetwork.chainId
+      )
     ) {
       window.alert(
         "Switch your Wallet to blockchain network " +
@@ -40,11 +44,14 @@ export const connect = async (): Promise<IWallet> => {
     provider.on("accountsChanged", utils.reloadApp);
     provider.on("chainChanged", utils.reloadApp);
     provider.on("disconnect", utils.reloadApp);
-
+    const accounts: string[] = (await provider.request({
+      method: "eth_requestAccounts",
+    })) as string[];
+    console.log("Accounts", JSON.stringify(accounts));
     return {
       ...defaultWallet,
       walletProviderName: "defiwallet",
-      address: (await web3Provider.listAccounts())[0],
+      address: accounts[0],
       browserWeb3Provider: web3Provider,
       serverWeb3Provider: new ethers.providers.JsonRpcProvider(
         config.configVars.rpcNetwork.rpcUrl

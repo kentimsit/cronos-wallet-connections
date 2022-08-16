@@ -59,11 +59,16 @@ const Home: React.FC<IProps> = () => {
     }
 
     // If wallet is connected, query the wallet and update stored values
+    console.log(JSON.stringify(newWallet));
+
     if (newWallet.connected) {
       const croBalance = await utils.getCroBalance(
         newWallet.serverWeb3Provider,
         newWallet.address
       );
+      window.alert("hey");
+      console.log(croBalance);
+
       updateWalletAction(dispatch, newWallet);
       updateChainDataAction(dispatch, {
         ...defaultChainData,

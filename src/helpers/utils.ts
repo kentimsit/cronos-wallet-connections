@@ -17,8 +17,10 @@ export const getCroBalance = async (
   serverWeb3Provider: ethers.providers.JsonRpcProvider,
   address: string
 ): Promise<number> => {
+  window.alert("hey2");
   const balance = await serverWeb3Provider.getBalance(address);
   // Balance is rounded at 2 decimals instead of 18, to simplify the UI
+
   return (
     ethers.BigNumber.from(balance)
       .div(ethers.BigNumber.from("10000000000000000"))
