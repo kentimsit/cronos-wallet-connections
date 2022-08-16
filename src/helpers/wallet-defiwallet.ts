@@ -29,9 +29,9 @@ export const connect = async (): Promise<IWallet> => {
       window.alert(
         "Switch your Wallet to blockchain network " +
           config.configVars.rpcNetwork.chainName +
-          " instead of " +
+          ". Chain ID is " +
           parseInt(provider.chainId) +
-          " vs " +
+          " instead of " +
           config.configVars.rpcNetwork.chainId
       );
       return defaultWallet;
