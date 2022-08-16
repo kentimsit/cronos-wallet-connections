@@ -84,4 +84,8 @@ heroku git:remote -a cronos-wallet-connections
 
 git push heroku main
 
+# Build another branch;
+
+git push heroku new_branch:master
+
 ```
