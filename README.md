@@ -53,7 +53,9 @@ Once this is done, the wallet connection via deficonnect should also work automa
 ```shell
 npx create-react-app my-app --template typescript
 npm install react-router-dom @types/react-router-dom http-proxy-middleware
-npm install ethers web3 @walletconnect/web3-provider deficonnect
+npm install ethers web3 @walletconnect/web3-provider
+npm install "@deficonnect/web3-connector" "@deficonnect/provider"
+npm install "@web3-react/core" "@web3-react/injected-connector" "@web3-react/walletconnect-connector"
 npm install @mui/material @emotion/react @emotion/styled
 ```
 

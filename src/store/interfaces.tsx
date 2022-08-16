@@ -28,10 +28,8 @@ export const defaultRefreshing = {
 export interface IWallet {
   walletProviderName: string; // for example, "metamask" or "defiwallet"
   address: string; // 0x address of the user
-  browserWeb3Provider: any; // Web3 provider connected to the wallet's browser extension
-  serverWeb3Provider: ethers.providers.JsonRpcProvider | null; // cloud based Web3 provider for read-only
-  wcConnector: any; // connector object provided by some wallet connection methods, stored if relevant
-  wcProvider: any; // provider object provided by some wallet connection methods, stored if relevant
+  browserWeb3Provider: any; // Web3 provider connected to the wallet's browser extension, used to sign transactions
+  serverWeb3Provider: ethers.providers.JsonRpcProvider | null; // cloud based Web3 provider, used for read-only
   connected: boolean; // is the wallet connected to the Dapp, or not?
   chainId: number; // for example, 25 for Cronos mainnet, and 338 for Cronos testnet
 }
@@ -41,8 +39,6 @@ export const defaultWallet: IWallet = {
   address: "",
   browserWeb3Provider: null,
   serverWeb3Provider: null,
-  wcConnector: null,
-  wcProvider: null,
   connected: false,
   chainId: 0,
 };

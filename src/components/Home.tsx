@@ -191,7 +191,7 @@ const Home: React.FC<IProps> = () => {
             gutterBottom
             sx={{ color: "white", marginBottom: 2, marginTop: 4 }}
           >
-            Wallet connection
+            Direct wallet connection
           </Typography>
           <Typography
             variant="body1"
@@ -228,14 +228,13 @@ const Home: React.FC<IProps> = () => {
           >
             Wallet Connect
           </ActionButton>
-
           <Typography
             variant="h5"
             component="div"
             gutterBottom
             sx={{ color: "white", marginBottom: 2, marginTop: 4 }}
           >
-            Wallet connection
+            Transactions
           </Typography>
           <ActionButton
             variant="contained"

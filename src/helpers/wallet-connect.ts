@@ -49,7 +49,6 @@ export const connect = async (): Promise<IWallet> => {
       serverWeb3Provider: new ethers.providers.JsonRpcProvider(
         config.configVars.rpcNetwork.rpcUrl
       ),
-      wcProvider: provider,
       connected: true,
       chainId: provider.chainId,
     };
