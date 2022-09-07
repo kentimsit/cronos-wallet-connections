@@ -37,11 +37,7 @@ export const connect = async (): Promise<IWallet> => {
       );
       return defaultWallet;
     }
-    // Subscribe to events that reload the app
-    provider.on("accountsChanged", utils.reloadApp);
-    provider.on("chainChanged", utils.reloadApp);
-    provider.on("disconnect", utils.reloadApp);
-    return {
+    const newWallet = {
       ...defaultWallet,
       walletProviderName: "walletconnect",
       address: (await ethersProvider.listAccounts())[0],
@@ -49,10 +45,20 @@ export const connect = async (): Promise<IWallet> => {
       serverWeb3Provider: new ethers.providers.JsonRpcProvider(
         config.configVars.rpcNetwork.rpcUrl
       ),
-      wcProvider: provider,
       connected: true,
       chainId: provider.chainId,
     };
+    // Subscribe to events that reload the app
+    provider.on("accountsChanged", (x: any) => {
+      utils.actionWhenWalletChange("accountsChanged", x, newWallet);
+    });
+    provider.on("chainChanged", (x: any) => {
+      utils.actionWhenWalletChange("chainChanged", x, newWallet);
+    });
+    provider.on("disconnect", (x: any) => {
+      utils.actionWhenWalletChange("disconnect", x, newWallet);
+    });
+    return newWallet;
   } catch (e) {
     window.alert(e);
     return defaultWallet;

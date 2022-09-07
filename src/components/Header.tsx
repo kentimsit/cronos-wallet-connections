@@ -6,7 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 
 declare global {
   interface Window {
-    ethereum: any;
+    ethereum?: any;
   }
 }
 

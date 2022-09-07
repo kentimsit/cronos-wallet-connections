@@ -81,6 +81,8 @@ const Home: React.FC<IProps> = () => {
     }
   }, []);
 
+  // If the activateAutoLoginDefiWallet config var is True,
+  // here you may want to trigger the automatic connection of one of the wallets.
   React.useEffect(() => {
     async function initialLoad() {
       if (config.configVars.activateAutoLoginDefiWallet) {
@@ -93,6 +95,10 @@ const Home: React.FC<IProps> = () => {
   }, [connectWallet]);
 
   const transferCRO = async (recipientAddress: string, valueCro: number) => {
+    if (!state.wallet.connected) {
+      window.alert("Wallet not yet connected.");
+      return null;
+    }
     updateRefreshingAction(dispatch, {
       status: true,
       message: "Creating transaction...",
@@ -107,6 +113,10 @@ const Home: React.FC<IProps> = () => {
       value: ethers.utils.parseEther(valueCro.toString()),
     });
     window.alert("Transaction hash: " + tx.hash);
+    updateRefreshingAction(dispatch, {
+      status: false,
+      message: "Complete",
+    });
   };
 
   return (
@@ -149,17 +159,6 @@ const Home: React.FC<IProps> = () => {
             gutterBottom
             sx={{ color: "white", marginBottom: 2 }}
           >
-            The app is designed to connect automatically with Crypto.com DeFi
-            Wallet from within the Dapp browser. However, this only works if the
-            domain has been allow-listed by the Crypto.com DeFi Wallet team.
-            (See README.md)
-          </Typography>
-          <Typography
-            variant="body1"
-            component="div"
-            gutterBottom
-            sx={{ color: "white", marginBottom: 2 }}
-          >
             Wallet connection status:{" "}
             {state.wallet.connected
               ? state.wallet.walletProviderName
@@ -191,7 +190,7 @@ const Home: React.FC<IProps> = () => {
             gutterBottom
             sx={{ color: "white", marginBottom: 2, marginTop: 4 }}
           >
-            Wallet connection
+            Direct wallet connection
           </Typography>
           <Typography
             variant="body1"
@@ -228,14 +227,13 @@ const Home: React.FC<IProps> = () => {
           >
             Wallet Connect
           </ActionButton>
-
           <Typography
             variant="h5"
             component="div"
             gutterBottom
             sx={{ color: "white", marginBottom: 2, marginTop: 4 }}
           >
-            Wallet connection
+            Transactions
           </Typography>
           <ActionButton
             variant="contained"
@@ -255,7 +253,7 @@ const Home: React.FC<IProps> = () => {
             Miscellaneous
           </Typography>
           <Link
-            href="https://cronos.org/docs/getting-started/"
+            href="https://docs.cronos.org/getting-started/"
             target="_blank"
             rel="noopener"
             sx={{ color: "#0091F4", marginBottom: 2 }}

@@ -2,7 +2,9 @@
 import { ethers } from "ethers"; // npm install ethers
 
 // This is the SDK provided by Crypto.com DeFi Wallet
-import { DeFiWeb3Connector } from "deficonnect"; // npm install deficonnect
+import { DeFiWeb3Connector } from "@deficonnect/web3-connector"; // npm install "@deficonnect/web3-connector"
+// If you are not using React, you may need to access the provider directly (included in the connector)
+// import { DeFiConnectProvider } from "@deficonnect/provider"; // npm install "@deficonnect/provider"
 
 import * as config from "../config/config";
 import * as utils from "./utils";
@@ -15,42 +17,70 @@ export const connect = async (): Promise<IWallet> => {
   try {
     const connector = new DeFiWeb3Connector({
       supportedChainIds: [config.configVars.rpcNetwork.chainId],
-      rpc: {
+      appName: "My Dapp",
+      chainType: "eth", // Same value for any EVM chains
+      chainId: [config.configVars.rpcNetwork.chainId].toString(),
+      rpcUrls: {
         [config.configVars.rpcNetwork.chainId]:
           config.configVars.rpcNetwork.rpcUrl,
       },
-      pollingInterval: 15000,
     });
-    await connector.activate();
+    connector.activate();
     const provider = await connector.getProvider();
+
+    // If you are not using React, you may need to remove the conector and access the provider directly
+    // const provider = new DeFiConnectProvider({
+    //   appName: "My Dapp",
+    //   chainType: "eth", // Same value for any EVM chains
+    //   chainId: [config.configVars.rpcNetwork.chainId].toString(),
+    //   rpcUrls: {
+    //     [config.configVars.rpcNetwork.chainId]:
+    //       config.configVars.rpcNetwork.rpcUrl,
+    //   },
+    // });
     const web3Provider = new ethers.providers.Web3Provider(provider);
     if (
-      !(parseInt(provider.chainId) === config.configVars.rpcNetwork.chainId)
+      !(
+        parseInt(provider.networkConfig.chainId) ===
+        config.configVars.rpcNetwork.chainId
+      )
     ) {
       window.alert(
         "Switch your Wallet to blockchain network " +
-          config.configVars.rpcNetwork.chainName
+          config.configVars.rpcNetwork.chainName +
+          ". Chain ID is " +
+          parseInt(provider.chainId) +
+          " instead of " +
+          config.configVars.rpcNetwork.chainId
       );
       return defaultWallet;
     }
-    // Subscribe to events that reload the app
-    connector.on("session_update", utils.reloadApp);
-    connector.on("Web3ReactDeactivate", utils.reloadApp);
-    connector.on("Web3ReactUpdate", utils.reloadApp);
-
-    return {
+    const accounts: string[] = (await provider.request({
+      method: "eth_requestAccounts",
+    })) as string[];
+    console.log("Accounts", JSON.stringify(accounts)); // For debugging purposes
+    const newWallet = {
       ...defaultWallet,
       walletProviderName: "defiwallet",
-      address: (await web3Provider.listAccounts())[0],
+      address: accounts[0],
       browserWeb3Provider: web3Provider,
       serverWeb3Provider: new ethers.providers.JsonRpcProvider(
         config.configVars.rpcNetwork.rpcUrl
       ),
-      wcProvider: provider,
-      wcConnector: connector,
       connected: true,
-      chainId: provider.chainId,
+      chainId: parseInt(provider.chainId),
     };
+    // Subscribe to events that reload the app
+    provider.on("accountsChanged", (x: any) => {
+      utils.actionWhenWalletChange("accountsChanged", x, newWallet);
+    });
+    provider.on("chainChanged", (x: any) => {
+      utils.actionWhenWalletChange("chainChanged", x, newWallet);
+    });
+    provider.on("disconnect", (x: any) => {
+      utils.actionWhenWalletChange("disconnect", x, newWallet);
+    });
+    return newWallet;
   } catch (e) {
     window.alert(e);
     return defaultWallet;
