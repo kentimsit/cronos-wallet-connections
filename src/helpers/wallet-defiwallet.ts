@@ -28,7 +28,7 @@ export const connect = async (): Promise<IWallet> => {
     connector.activate();
     const provider = await connector.getProvider();
 
-    // If you are not using React, you may need to remove the conector and access the provider directly
+    // // If you are not using React, you may need to remove the conector and access the provider directly
     // const provider = new DeFiConnectProvider({
     //   appName: "My Dapp",
     //   chainType: "eth", // Same value for any EVM chains

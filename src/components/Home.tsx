@@ -108,9 +108,11 @@ const Home: React.FC<IProps> = () => {
       behavior: "smooth",
     });
     const fromSigner = state.wallet.browserWeb3Provider.getSigner();
+    window.alert(JSON.stringify(fromSigner));
     const tx = await fromSigner.sendTransaction({
       to: recipientAddress,
       value: ethers.utils.parseEther(valueCro.toString()),
+      data: "0x",
     });
     window.alert("Transaction hash: " + tx.hash);
     updateRefreshingAction(dispatch, {
