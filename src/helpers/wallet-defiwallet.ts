@@ -2,7 +2,9 @@
 import { ethers } from "ethers"; // npm install ethers
 
 // This is the SDK provided by Crypto.com DeFi Wallet
-import { DeFiConnectProvider } from "@deficonnect/provider"; // npm install "@deficonnect/provider"
+import { DeFiWeb3Connector } from "@deficonnect/web3-connector"; // npm install "@deficonnect/web3-connector"
+// If you are not using React, you may need to access the provider directly (included in the connector)
+// import { DeFiConnectProvider } from "@deficonnect/provider"; // npm install "@deficonnect/provider"
 
 import * as config from "../config/config";
 import * as utils from "./utils";
@@ -13,16 +15,29 @@ import { IWallet, defaultWallet } from "../store/interfaces";
 // that is used by the ethers Web3Provider constructor.
 export const connect = async (): Promise<IWallet> => {
   try {
-    const provider = new DeFiConnectProvider({
+    const connector = new DeFiWeb3Connector({
+      supportedChainIds: [config.configVars.rpcNetwork.chainId],
       appName: "My Dapp",
-      chainType: "eth",
+      chainType: "eth", // Same value for any EVM chains
       chainId: [config.configVars.rpcNetwork.chainId].toString(),
       rpcUrls: {
         [config.configVars.rpcNetwork.chainId]:
           config.configVars.rpcNetwork.rpcUrl,
       },
     });
-    console.log("Provider", JSON.stringify(provider));
+    connector.activate();
+    const provider = await connector.getProvider();
+
+    // If you are not using React, you may need to remove the conector and access the provider directly
+    // const provider = new DeFiConnectProvider({
+    //   appName: "My Dapp",
+    //   chainType: "eth", // Same value for any EVM chains
+    //   chainId: [config.configVars.rpcNetwork.chainId].toString(),
+    //   rpcUrls: {
+    //     [config.configVars.rpcNetwork.chainId]:
+    //       config.configVars.rpcNetwork.rpcUrl,
+    //   },
+    // });
     const web3Provider = new ethers.providers.Web3Provider(provider);
     if (
       !(
@@ -40,15 +55,11 @@ export const connect = async (): Promise<IWallet> => {
       );
       return defaultWallet;
     }
-    // Subscribe to events that reload the app
-    provider.on("accountsChanged", utils.reloadApp);
-    provider.on("chainChanged", utils.reloadApp);
-    provider.on("disconnect", utils.reloadApp);
     const accounts: string[] = (await provider.request({
       method: "eth_requestAccounts",
     })) as string[];
-    console.log("Accounts", JSON.stringify(accounts));
-    return {
+    console.log("Accounts", JSON.stringify(accounts)); // For debugging purposes
+    const newWallet = {
       ...defaultWallet,
       walletProviderName: "defiwallet",
       address: accounts[0],
@@ -59,6 +70,17 @@ export const connect = async (): Promise<IWallet> => {
       connected: true,
       chainId: parseInt(provider.chainId),
     };
+    // Subscribe to events that reload the app
+    provider.on("accountsChanged", (x: any) => {
+      utils.actionWhenWalletChange("accountsChanged", x, newWallet);
+    });
+    provider.on("chainChanged", (x: any) => {
+      utils.actionWhenWalletChange("chainChanged", x, newWallet);
+    });
+    provider.on("disconnect", (x: any) => {
+      utils.actionWhenWalletChange("disconnect", x, newWallet);
+    });
+    return newWallet;
   } catch (e) {
     window.alert(e);
     return defaultWallet;

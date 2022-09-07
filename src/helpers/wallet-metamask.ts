@@ -50,15 +50,7 @@ export const connect = async (): Promise<IWallet> => {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-
-    // It is possible to subscribe to events chainChanged,
-    // accountsChanged or disconnect,
-    // and reload the Dapp whenever one of these events occurs
-    window.ethereum.on("chainChanged", utils.reloadApp);
-    window.ethereum.on("accountsChanged", utils.reloadApp);
-    window.ethereum.on("disconnect", utils.reloadApp);
-
-    return {
+    const newWallet = {
       ...defaultWallet,
       walletProviderName: "metamask",
       address: accounts[0],
@@ -71,6 +63,20 @@ export const connect = async (): Promise<IWallet> => {
         await window.ethereum.request({ method: "eth_chainId" })
       ),
     };
+    // It is possible to subscribe to events chainChanged,
+    // accountsChanged or disconnect,
+    // and reload the Dapp whenever one of these events occurs
+    window.ethereum.on("chainChanged", (x: any) => {
+      utils.actionWhenWalletChange("chainChanged", x, newWallet);
+    });
+    window.ethereum.on("accountsChanged", (x: any) => {
+      utils.actionWhenWalletChange("accountsChanged", x, newWallet);
+    });
+    window.ethereum.on("disconnect", (x: any) => {
+      utils.actionWhenWalletChange("disconnect", x, newWallet);
+    });
+
+    return newWallet;
   } catch (e) {
     window.alert(e);
     return defaultWallet;

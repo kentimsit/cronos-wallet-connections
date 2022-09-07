@@ -1,5 +1,6 @@
 // helper/utils.ts
 import { ethers } from "ethers"; // npm install ethers
+import { defaultWallet, IWallet } from "../store/interfaces";
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -8,8 +9,16 @@ export const hexToInt = (s: string) => {
   return parseInt(bn.toString());
 };
 
-export const reloadApp = () => {
-  window.location.reload();
+export const actionWhenWalletChange = (
+  e: string,
+  a: any = "",
+  c: IWallet = defaultWallet
+) => {
+  console.log("Wallet event detected", e); // For debugging purposes
+  console.log("Event argument", a); // For debugging purposes
+  console.log("Context", JSON.stringify(c)); // For debugging purposes
+  // Then can insert any desired business logic
+  // window.location.reload();
 };
 
 // Get the CRO balance of address
@@ -17,10 +26,8 @@ export const getCroBalance = async (
   serverWeb3Provider: ethers.providers.JsonRpcProvider,
   address: string
 ): Promise<number> => {
-  window.alert("hey2");
   const balance = await serverWeb3Provider.getBalance(address);
   // Balance is rounded at 2 decimals instead of 18, to simplify the UI
-
   return (
     ethers.BigNumber.from(balance)
       .div(ethers.BigNumber.from("10000000000000000"))
