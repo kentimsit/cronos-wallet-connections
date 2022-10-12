@@ -1,6 +1,8 @@
-# cronos-wallet-connections
+# Cronos Wallet Connections: Crypto.Com DeFi Wallet, MetaMask, Trust Wallet, Wallet Connect V1
 
 This ReactJS repository demonstrates various types of crypto wallet connections when integrating with Cronos chain.
+
+You may refer to this blog post for context: [Medium post](https://medium.com/cronos-chain/cronos-developer-series-connect-your-dapp-with-defi-wallet-metamask-and-trust-wallet-77419fe696a5)
 
 ## Overview
 
