@@ -49,7 +49,7 @@ export const configVars = {
 //       symbol: "CRO",
 //       decimals: 18,
 //     },
-//     blockExplorerUrl: "https://testnet.cronoscan.com/",
+//     blockExplorerUrl: "https://cronos.org/explorer/testnet3/",
 //   },
 // rpcURLs: {
 //   338: "https://evm-t3.cronos.org/",
