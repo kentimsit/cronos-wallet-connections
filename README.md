@@ -84,3 +84,7 @@ This repository uses Cronos mainnet, and demonstrates the use of Web3-Wallet wit
 The `./app/api` and `./app/protected` routes are unused at the moment, could be used in a future version of this repository which demonstrates login via message signing.
 
 Refer to [this Web3 + NextJS tutorial for some other pointers](https://abhik.hashnode.dev/series/nextxweb3)
+
+## Acknowledgements
+
+Thank you [@logan272](https://github.com/logan272) for feedback and commits.
