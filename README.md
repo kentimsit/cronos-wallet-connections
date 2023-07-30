@@ -1,53 +1,86 @@
-# Cronos Wallet Connections: Crypto.Com DeFi Wallet, MetaMask, Trust Wallet, Wallet Connect V1
-
-This ReactJS repository demonstrates various types of crypto wallet connections when integrating with Cronos chain.
-
-You may refer to this blog post for context: [Medium post](https://medium.com/cronos-chain/cronos-developer-series-connect-your-dapp-with-defi-wallet-metamask-and-trust-wallet-77419fe696a5)
+# Cronos Wallet Connections
 
 ## Overview
 
-This app is a lightweight demo of crypto wallet integration with Cronos. It works with Crypto.com DeFi Wallet, MetaMask, and Trust Wallet.
+This is a boilerplate project using NextJS13 to demonstrate Web3 wallet connection on Cronos and basic interaction with the Cronos blockchain.
 
-The app works on Cronos mainnet (network id: 25) and uses the public JSON-RPC endpoint.
+Requirement: Node 18+
 
-So first, you will need to make the app compatible with :
+## Project creation
 
-- Crypto.com DeFi Wallet browser extension
-- Injected Web3 provider (MetaMask, Trust Wallet)
-- Wallet Connect (v1)
+This project was created with `npx create-next-app@latest` and it is based on [this tutorial](https://abhik.hashnode.dev/series/nextxweb3).
 
-These wallet connections are implemented in the helpers directory, which is used by the Home.tsx component. The wallet and Web3 connection are stored in the redux store (see store directory).
+Project creation:
 
-Once the above is done, you may want to get in touch with the Crypto.com DeFi Wallet and Trust Wallet teams to increase the visibility of your Dapp. Please visit the Cronos developer FAQ at [crofam.me/devtips](https://crofam.me/devtips) for more details about this.
+-   Use Typescript with NextJS 13 app.
+-   Use ESLint.
+-   We will not be using the src directory
+-   We will definitely use the App Router with NextJS 13
+-   Change the import alias to @
 
-## Packages used by this repository
+Configure port in `package.json`:
 
-```shell
-npx create-react-app my-app --template typescript
-npm install react-router-dom @types/react-router-dom http-proxy-middleware
-npm install ethers web3 @walletconnect/web3-provider
-npm install "@deficonnect/web3-connector"
-npm install "@web3-react/core" "@web3-react/injected-connector" "@web3-react/walletconnect-connector"
-npm install @mui/material @emotion/react @emotion/styled
+```json
+{
+    "scripts": {
+        "dev": "next dev -p 3000"
+    }
+}
 ```
 
-Webpack 5 can create some "BREAKING CHANGE: webpack<5 used to include polyfills" errors when using with web3.js. This blog post explains how to resolve the issue: [blog post](https://www.alchemy.com/blog/how-to-polyfill-node-core-modules-in-webpack-5).
+Then, install and configure:
 
-## How to run locally
+-   [Chakra UI](https://chakra-ui.com/getting-started/nextjs-guide)
+-   [Zustand for state management](https://github.com/pmndrs/zustand)
+-   [Ethers.js] (https://docs.ethers.org/). Here we are using v5 (5.7.2), as V6 is introducing some breaking changes that are not yet fully supported by all libraries.
+-   [Web3 Wallet](https://web3-wallet.github.io/web3-wallet/docs/getting-started)
+-   [TypeChain](https://github.com/dethcrypto/TypeChain) TypeScript bindings for your smart contracts
 
-Run the app locally to test it in your desktop browser.
+Web3 Wallet is an open-source wrapper developed especially to simplify the workflow of Cronos app developers, but it also supports other EVM compatible networks.
 
-If you'd like to test it on mobile, you can use the ngrok software which will explose a public URL for your localhost:3000.
+Then, create or update the /app directory.
 
-```shell
+## Env variables
+
+See .env.example
+
+## To launch the project locally
+
+```bash
 npm install
-npm start
+npm run dev
 ```
 
-## Additional details about Crypto.com DeFi Wallet
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-The older [deficonnect](https://www.npmjs.com/package/deficonnect) npm package has been deprecated.
+To use from another device with ngrok (installed with Homebrew):
 
-The latest package for Crypto.com DeFi Wallet integration is [https://www.npmjs.com/package/@deficonnect/web3-connector](https://www.npmjs.com/package/@deficonnect/web3-connector).
+```bash
+ngrok http --domain=domain-name.app 3000
+```
 
-The DefiWeb3Connector object uses the underlying DefiConnectProvider object which is provided by [https://www.npmjs.com/package/@deficonnect/provider](https://www.npmjs.com/package/@deficonnect/provider). DefiConnectProvider, in turn, uses window.deficonnectprovider or window.ethereum as the Web3 interface that lives in the browser (window.ethereum only works with the DeFi Wallet only if MetaMask is not installed; window.deficonnectprovider always works). Most developers can simply use DefiWeb3Connector as shown in this example. A few developers may need to access DefiConnectProvider or window.deficonnectprovider directly, for example if they are not using React or if they need more customization.
+## How to connect to Web3 wallet and Cronos blockchain
+
+The Cronos blockchain is supported by Crypto.com DeFi Wallet, Rabby, MetaMask, Trust Wallet and a number of other wallets such as those listed [here](https://web3-wallet.github.io/web3-wallet/wallets/metamask).
+
+In order to facilitate the use of these wallets by Cronos dapp developers, we recommend the use of [Web3-Wallet](https://web3-wallet.github.io/web3-wallet/docs/getting-started), a npm library used by several major Cronos dapps.
+
+This repository uses Cronos mainnet, and demonstrates the use of Web3-Wallet with a NextJS 13 application:
+
+-   The `./app/chains.ts` and `./app/wallets.ts` serve as configuration files
+-   If you need to read data from the blockchain, you also need to enter a blockchain URL which is going to support your rate of requests in the .env file, under `NEXT_PUBLIC_BLOCKCHAIN_URL`.
+-   The `./app/components/Navbar` demonstrates how the app manages the user's connection to their preferred wallet using a basic Modal interface (in this example, Crypto.com DeFi Wallet, Rabby / MetaMask, Trust Wallet, and Wallet Connect).
+-   The `./app/components/ReadChain` demonstrates how to read information from the Cronos blockchain, such as the latest block number and the crypto asset balance of a user.
+-   The `./app/components/WriteChain` demonstrates how to send a transaction to the Cronos blockchain (there are two examples: "send 1 CRO to myself" and "send 1 USDC to myself").
+
+## How to interact with smart contracts?
+
+-   Add your smart contract [ABI](https://docs.soliditylang.org/en/v0.8.19/abi-spec.html) to `./contracts/abis/[contractName].json`.
+-   Run `npm run typechain` to generate all the typescript bindings for your smart contract.
+-   Check `./app/components/ReadChain` or `./app/components/WriteChain` for how to create a contract object and interact with your smart contract through the contract object.
+
+## Work in process
+
+The `./app/api` and `./app/protected` routes are unused at the moment, could be used in a future version of this repository which demonstrates login via message signing.
+
+Refer to [this Web3 + NextJS tutorial for some other pointers](https://abhik.hashnode.dev/series/nextxweb3)
