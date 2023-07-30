@@ -1,62 +1,46 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@deficonnect/provider": "^2.0.2",
-    "@deficonnect/web3-connector": "^2.0.2",
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
-    "@metamask/detect-provider": "^1.2.0",
-    "@mui/icons-material": "^5.2.5",
-    "@mui/material": "^5.2.5",
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.0.3",
-    "@types/react-dom": "^17.0.11",
-    "@types/react-router-dom": "^5.3.2",
-    "@walletconnect/web3-provider": "^1.7.0",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.2.13",
-    "ethers": "^5.5.2",
-    "http-proxy-middleware": "^2.0.6",
-    "path-browserify": "^1.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^6.2.1",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^2.1.2",
-    "web3": "^1.6.1"
-  },
-  "devDependencies": {
-    "@types/node": "^16.11.15",
-    "@types/react": "^17.0.37",
-    "typescript": "^4.5.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "cronos-wallet-connections",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev -p 3000",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "typechain": "typechain --out-dir contracts/types --target ethers-v5 'contracts/abis/*.json'"
+    },
+    "dependencies": {
+        "@chakra-ui/icons": "^2.1.0",
+        "@chakra-ui/next-js": "^2.1.5",
+        "@chakra-ui/react": "^2.8.0",
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@types/node": "20.4.5",
+        "@types/react": "18.2.16",
+        "@types/react-dom": "18.2.7",
+        "@web3-wallet/defiwallet": "^2.4.1",
+        "@web3-wallet/metamask": "^2.4.1",
+        "@web3-wallet/react": "^2.5.0",
+        "@web3-wallet/trust-wallet": "^2.4.1",
+        "@web3-wallet/walletconnect": "^3.0.1",
+        "@web3modal/ethereum": "^2.7.0",
+        "@web3modal/react": "^2.7.0",
+        "autoprefixer": "10.4.14",
+        "eslint": "8.45.0",
+        "eslint-config-next": "13.4.12",
+        "ethers": "^5.7.2",
+        "framer-motion": "^10.13.1",
+        "next": "13.4.12",
+        "next-auth": "^4.22.3",
+        "pino-pretty": "^10.2.0",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "typescript": "5.1.6",
+        "zustand": "^4.3.9"
+    },
+    "devDependencies": {
+        "@typechain/ethers-v5": "^11.1.1",
+        "prettier": "3.0.0",
+        "typechain": "^8.3.1"
+    }
 }
