@@ -25,8 +25,9 @@ export function WriteChain() {
     const isLoading = isCroTxLoading || isUsdcTxLoading;
     const toast = useToast();
 
-    // `handleCro` tx can only be triggered after wallet connected.
-    // We can for sure that web3Provider, signer, and account is
+    // Creates a CRO transfer transaction.
+    // Transactionx can only be triggered after wallet connected.
+    // We first make sure that web3Provider, signer, and account is
     // available after wallet connected.
     const handleCroTx = useCallback(async () => {
         const signer = web3Provider?.getSigner() as Signer;
@@ -58,6 +59,7 @@ export function WriteChain() {
         }
     }, [web3Provider, account, toast, lastTransactionHashAction]);
 
+    // Creates a USDC transfer transaction.
     const handleUsdcTx = useCallback(async () => {
         const signer = web3Provider?.getSigner() as Signer;
         try {

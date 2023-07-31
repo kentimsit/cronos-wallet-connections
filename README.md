@@ -8,7 +8,7 @@ Requirement: Node 18+
 
 ## Project creation
 
-This project was created with `npx create-next-app@latest` and it is based on [this tutorial](https://abhik.hashnode.dev/series/nextxweb3).
+This project was created with `npx create-next-app@latest`.
 
 Project creation:
 
@@ -81,7 +81,7 @@ This repository uses Cronos mainnet, and demonstrates the use of Web3-Wallet wit
 
 ## How to setup another blockchain?
 
-At present, the Boilerplace dApp is configured to work only with Cronos Mainnet and Cronos Testnet. However, if you need to set up an additional EVM compatible chain, you may proceed with the following steps.
+At present, this demo is configured to work with Cronos Mainnet and Cronos Testnet. However, if you need to set up an additional EVM compatible chain, you may proceed with the following steps.
 
 Let's say you want to add myChain to your dApp:
 
@@ -121,8 +121,6 @@ export const chainConfigs: ChainConfig[] = [
     }
 ]
 ```
-
-##
 
 ## Work in process
 
