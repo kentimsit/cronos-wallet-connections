@@ -37,6 +37,8 @@ export function ReadChain() {
         async function readData() {
             if (!isConnected || !isSupportedChainId(chainId)) return;
 
+            // Connect to the usdc(crc20) contract.
+            // Once connected, you can interact with usdc through the connected contract
             const usdcContract = Crc20__factory.connect(
                 usdcAddress,
                 jsonRpcProvider,
