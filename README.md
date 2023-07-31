@@ -79,6 +79,51 @@ This repository uses Cronos mainnet, and demonstrates the use of Web3-Wallet wit
 -   Run `npm run typechain` to generate all the typescript bindings for your smart contract.
 -   Check `./app/components/ReadChain` or `./app/components/WriteChain` for how to create a contract object and interact with your smart contract through the contract object.
 
+## How to setup another blockchain?
+
+At present, the Boilerplace dApp is configured to work only with Cronos Mainnet and Cronos Testnet. However, if you need to set up an additional EVM compatible chain, you may proceed with the following steps.
+
+Let's say you want to add myChain to your dApp:
+
+1. Update `./global.d.ts` accordingly:
+
+```typescript
+interface ProcessEnv {
+    readonly NEXT_PUBLIC_CRONOS_MAINNET_RPC_URL: string;
+    readonly NEXT_PUBLIC_CRONOS_TESTNET_RPC_URL: string;
+    readonly NEXT_PUBLIC_MY_CHAIN_RPC_URL: string;
+
+    readonly NEXT_PUBLIC_BLOCKCHAIN_NETWORK:
+        | "cronosMainnet"
+        | "cronosTestnet"
+        | "myChain";
+}
+```
+
+2. Update the `NEXT_PUBLIC_BLOCKCHAIN_NETWORK` env variable in `./.env` to `NEXT_PUBLIC_BLOCKCHAIN_NETWORK=myChain`.
+
+3. Add your chain configuration in `./app/chains.ts`:
+
+```typescript
+export enum ChainId {
+    CronosMainnet = 25,
+    CronosTestnet = 338,
+    MyChain = ???
+};
+
+export const chainConfigs: ChainConfig[] = [
+    ...
+    {
+        chainId: ChainId.MyChain,
+        chainName: "My Chain",
+        rpcUrls: [process.env.NEXT_PUBLIC_MY_CHAIN_RPC_URL],
+        ...
+    }
+]
+```
+
+##
+
 ## Work in process
 
 The `./app/api` and `./app/protected` routes are unused at the moment, could be used in a future version of this repository which demonstrates login via message signing.

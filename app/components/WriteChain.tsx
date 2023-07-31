@@ -25,8 +25,9 @@ export function WriteChain() {
     const isLoading = isCroTxLoading || isUsdcTxLoading;
     const toast = useToast();
 
-    // `handleCro` tx can only be triggered when you are connected to wallet.
-    // And we can web3Provider, signer, and account is for sure available.
+    // `handleCro` tx can only be triggered after wallet connected.
+    // We can for sure that web3Provider, signer, and account is
+    // available after wallet connected.
     const handleCroTx = useCallback(async () => {
         const signer = web3Provider?.getSigner() as Signer;
         try {
@@ -62,6 +63,8 @@ export function WriteChain() {
         try {
             setIsUsdcTxLoading(true);
 
+            // Connect to the usdc(crc20) contract.
+            // Once connected, you can interact with usdc through the connected contract.
             const usdcContractWithSigner = Crc20__factory.connect(
                 usdcAddress,
                 signer,

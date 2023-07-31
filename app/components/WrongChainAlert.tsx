@@ -13,7 +13,7 @@ export const WrongChainAlert = () => {
             borderRadius="4px"
         >
             <Text>
-                Your wallet app is connected to a chain that this dApp is
+                Your wallet app is connected to a chain that this dApp is not
                 intended to run on.
             </Text>
             <Divider my={8} borderColor="red.500" />
@@ -21,7 +21,7 @@ export const WrongChainAlert = () => {
                 <Button
                     colorScheme="blue"
                     onClick={() => {
-                        connect(getAddChainParameters(ChainId.CronosMainnet));
+                        connect(getAddChainParameters());
                     }}
                 >
                     Switch to Cronos Mainnet
@@ -29,7 +29,7 @@ export const WrongChainAlert = () => {
                 <Button
                     colorScheme="blue"
                     onClick={() => {
-                        connect(getAddChainParameters(ChainId.CronosMainnet));
+                        connect(getAddChainParameters());
                     }}
                 >
                     Switch to Cronos Testnet
