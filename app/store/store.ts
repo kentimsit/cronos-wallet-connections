@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export interface IReadData {
     blockNumber: number;
@@ -16,25 +15,18 @@ export interface IState {
     setLastTransactionHash: (lastTransactionHash: string) => void;
 }
 
-const useStore = create<IState>()(
-    persist(
-        (set) => ({
-            context: "welcome",
-            setContext: (context: string) => set({ context }),
-            readData: {
-                blockNumber: 0,
-                croBalance: "0",
-                usdcBalance: "0",
-            },
-            setReadData: (readData: IReadData) => set({ readData }),
-            lastTransactionHash: "",
-            setLastTransactionHash: (lastTransactionHash: string) =>
-                set({ lastTransactionHash }),
-        }),
-        {
-            name: "app-storage-wefwe", // name of the item in the storage (must be unique)
-        },
-    ),
-);
+const useStore = create<IState>()((set) => ({
+    context: "welcome",
+    setContext: (context: string) => set({ context }),
+    readData: {
+        blockNumber: 0,
+        croBalance: "0",
+        usdcBalance: "0",
+    },
+    setReadData: (readData: IReadData) => set({ readData }),
+    lastTransactionHash: "",
+    setLastTransactionHash: (lastTransactionHash: string) =>
+        set({ lastTransactionHash }),
+}));
 
 export default useStore;

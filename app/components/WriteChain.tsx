@@ -29,6 +29,7 @@ export function WriteChain() {
     // Transactionx can only be triggered after wallet connected.
     // We first make sure that web3Provider, signer, and account is
     // available after wallet connected.
+    // The data field 0x is required, according to DeFi Wallet specification.
     const handleCroTx = useCallback(async () => {
         const signer = web3Provider?.getSigner() as Signer;
         try {
@@ -37,6 +38,7 @@ export function WriteChain() {
             const txResponse = await signer.sendTransaction({
                 to: account as string,
                 value: ethers.utils.parseEther("1"),
+                data: "0x",
             });
 
             const receipt = await txResponse.wait();
