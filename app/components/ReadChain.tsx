@@ -1,7 +1,7 @@
 "use client";
 import { ethers } from "ethers";
 import { VStack, Text } from "@chakra-ui/react";
-import useStore from "@/app/store/store";
+import useStore, { IReadData } from "@/app/store/store";
 import { useEffect, useState } from "react";
 import { currentWallet } from "../wallets";
 import { Crc20__factory } from "@/contracts/types";
@@ -34,7 +34,7 @@ export function ReadChain() {
     useEffect(() => {
         let canceled = false;
 
-        async function readData() {
+        async function readDataFlow() {
             if (!isConnected || !isSupportedChainId(chainId)) return;
 
             // Connect to the usdc(crc20) contract.
@@ -43,8 +43,9 @@ export function ReadChain() {
                 usdcAddress,
                 jsonRpcProvider,
             );
-
+            
             try {
+                const readDataOriginal: IReadData = { ...readData};    
                 const [blockNumber, croBalanceBN, usdcBalanceBN] =
                     await Promise.all([
                         jsonRpcProvider.getBlockNumber(),
@@ -66,6 +67,7 @@ export function ReadChain() {
                         blockNumber: blockNumber,
                         croBalance: parseAndRoundDecimal(croBalance),
                         usdcBalance: parseAndRoundDecimal(usdcBalance),
+                        verifiedAddress: readDataOriginal["verifiedAddress"]
                     };
                     readDataAction(newReadData);
                 }
@@ -74,7 +76,7 @@ export function ReadChain() {
             }
         }
 
-        readData();
+        readDataFlow();
 
         return () => {
             canceled = true;
@@ -85,6 +87,7 @@ export function ReadChain() {
         isLoaded,
         isConnected,
         account,
+        readData,
         readDataAction,
         chainId,
     ]);
@@ -96,6 +99,7 @@ export function ReadChain() {
             <Text>Block number: {readData.blockNumber}</Text>
             <Text>CRO balance: {readData.croBalance}</Text>
             <Text>USDC balance: {readData.usdcBalance}</Text>
+            <Text>Verified address (after signed log-in): {readData.verifiedAddress}</Text>
         </VStack>
     );
 }

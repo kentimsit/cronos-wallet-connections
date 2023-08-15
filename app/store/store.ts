@@ -4,6 +4,7 @@ export interface IReadData {
     blockNumber: number;
     croBalance: string;
     usdcBalance: string;
+    verifiedAddress: string;
 }
 
 export interface IState {
@@ -22,6 +23,7 @@ const useStore = create<IState>()((set) => ({
         blockNumber: 0,
         croBalance: "0",
         usdcBalance: "0",
+        verifiedAddress: "No signed message yet",
     },
     setReadData: (readData: IReadData) => set({ readData }),
     lastTransactionHash: "",

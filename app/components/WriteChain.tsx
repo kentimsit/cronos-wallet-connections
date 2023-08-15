@@ -1,7 +1,7 @@
 "use client";
 import { Signer, ethers } from "ethers";
 import { Button, useToast, VStack } from "@chakra-ui/react";
-import useStore from "@/app/store/store";
+import useStore, { IReadData } from "@/app/store/store";
 import { currentWallet } from "../wallets";
 import { useCallback, useState } from "react";
 import { Crc20__factory } from "@/contracts/types";
@@ -12,6 +12,8 @@ import { useContractAddress } from "../hooks/useContractAddress";
 const { useIsConnected, useAccount, useProvider } = currentWallet;
 
 export function WriteChain() {
+    const readData = useStore((state) => state.readData);
+    const readDataAction = useStore((state) => state.setReadData);
     const lastTransactionHash = useStore((state) => state.lastTransactionHash);
     const lastTransactionHashAction = useStore(
         (state) => state.setLastTransactionHash,
@@ -19,11 +21,45 @@ export function WriteChain() {
     const isConnected = useIsConnected();
     const account = useAccount();
     const web3Provider = useProvider();
+    const [isSigLoading, setIsSigLoading] = useState(false);
     const [isCroTxLoading, setIsCroTxLoading] = useState(false);
     const [isUsdcTxLoading, setIsUsdcTxLoading] = useState(false);
     const usdcAddress = useContractAddress("USDC");
     const isLoading = isCroTxLoading || isUsdcTxLoading;
     const toast = useToast();
+
+    const createRandomMessageId = (): string => {
+        const randomNumber: number = Math.floor(Math.random() * 1000000000);
+        return randomNumber.toString().padStart(9, "0");
+    };
+
+    // Creates a Message signature
+    // No on-chain action
+    const handleSig = useCallback(async () => {
+        const signer = web3Provider?.getSigner() as Signer;
+        const readDataOriginal: IReadData = { ...readData};    
+        try {
+            setIsSigLoading(true);
+            const msg = "I am signing this message in order to security certify ownership of my wallet address. This signature is not used to authorize any transactions. (Msg ID: " +
+            createRandomMessageId() +
+            ")"
+            const signedMessage = await signer.signMessage(msg);
+            const verifiedSigningAddress = ethers.utils.verifyMessage(msg, signedMessage);
+            const newReadData = { ...readDataOriginal,
+                verifiedAddress: verifiedSigningAddress
+            };
+            readDataAction(newReadData);
+
+        } catch (e: unknown) {
+            toast({
+                position: "top",
+                status: "error",
+                description: (e as Error).message ?? "Signature failed",
+            });
+        } finally {
+            setIsSigLoading(false);
+        }
+    }, [readData, readDataAction, toast, web3Provider]);
 
     // Creates a CRO transfer transaction.
     // Transactionx can only be triggered after wallet connected.
@@ -104,6 +140,14 @@ export function WriteChain() {
 
     return (
         <VStack gap={3} alignItems="flex-start">
+            <Button
+                colorScheme="blue"
+                size="md"
+                isLoading={isSigLoading}
+                onClick={handleSig}
+            >
+                Sign a log-in message
+            </Button>
             <Button
                 colorScheme="blue"
                 size="md"
